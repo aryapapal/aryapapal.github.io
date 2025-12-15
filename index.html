@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arya Papal - Research Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+
+        /* NAVIGATION */
+        nav {
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,197.3C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-image {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: 0 auto 1.5rem;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            object-fit: cover;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            margin: 0.5rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #f7fafc;
+        }
+
+        /* SECTIONS */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            background: white;
+            margin: 2rem auto;
+            padding: 3rem 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        section h2 {
+            font-size: 2.2rem;
+            color: #2b5876;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 4px solid #667eea;
+            display: inline-block;
+        }
+
+        /* ABOUT */
+        .about-content {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #4a5568;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .info-item {
+            padding: 1.2rem;
+            background: #f7fafc;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-item strong {
+            color: #2b5876;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* RESEARCH CARDS */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .research-card {
+            background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .research-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.25);
+        }
+
+        .research-card h3 {
+            color: #2b5876;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .research-card .institution {
+            color: #718096;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .research-card .advisor {
+            color: #a0aec0;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .research-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .research-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .research-card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* PRESENTATIONS */
+        .presentation-card {
+            background: linear-gradient(135deg, #fef5e7 0%, #fff9f0 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 5px solid #f59e42;
+            margin-bottom: 2rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        .presentation-card h3 {
+            color: #2b5876;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .presentation-date {
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .presentation-card p {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .btn-presentation {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-presentation:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f59e42;
+        }
+
+        .btn-secondary:hover {
+            background: #ed8936;
+        }
+
+        /* PDF VIEWER */
+        .pdf-viewer {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        /* SKILLS */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .skill-category {
+            background: #f7fafc;
+            padding: 1.8rem;
+            border-radius: 10px;
+            border-top: 4px solid #667eea;
+        }
+
+        .skill-category h3 {
+            color: #2b5876;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .skill-category p {
+            color: #4a5568;
+            line-height: 1.8;
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+            color: white;
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #a8dadc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            section {
+                padding: 2rem 1.5rem;
+            }
+
+            .research-grid,
+            .info-grid,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#research">Research</a></li>
+            <li><a href="#presentations">Presentations</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <div class="hero-content">
+            <img src="profile.jpg" alt="Arya Papal" class="profile-image">
+            <h1>Arya Papal</h1>
+            <p class="tagline">Astrophysics Researcher</p>
+            <a href="cv_aryapapal.pdf" class="btn" download>Download CV</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <!-- ABOUT SECTION -->
+        <section id="about">
+            <h2>About Me</h2>
+            <p class="about-content">
+                I am an astrophysics researcher specializing in instrumental calibration, CMB foreground modeling, and polarimetric analysis. I graduated from the University of Cincinnati with a BS in Astrophysics & Physics and a minor in Mathematics. Currently, I am a Post-Baccalaureate Researcher at the Inter-University Centre for Astronomy and Astrophysics (IUCAA) in Pune, India, where I work on the WALOP four-beam polarimeter calibration project.
+            </p>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Education</strong>
+                    University of Cincinnati<br>
+                    BS in Astrophysics & Physics<br>
+                    Minor in Mathematics<br>
+                    August 2021 - May 2025
+                </div>
+                <div class="info-item">
+                    <strong>Current Position</strong>
+                    Post-Baccalaureate Researcher<br>
+                    IUCAA, Pune, India<br>
+                    July 2025 - Present
+                </div>
+                <div class="info-item">
+                    <strong>Contact</strong>
+                    Email: <a href="mailto:aryapapal2406@gmail.com">aryapapal2406@gmail.com</a><br>
+                    LinkedIn: <a href="https://www.linkedin.com/in/aryapapal" target="_blank">aryapapal</a>
+                </div>
+                <div class="info-item">
+                    <strong>Research Interests</strong>
+                    CMB Polarimetry<br>
+                    Polarimeter Instrumentation<br>
+                    Bayesian Inference<br>
+                    Foreground Modeling
+                </div>
+            </div>
+        </section>
+
+        <!-- RESEARCH EXPERIENCE -->
+        <section id="research">
+            <h2>Research Experience</h2>
+            <div class="research-grid">
+                <!-- IUCAA RESEARCH -->
+                <div class="research-card">
+                    <h3>WALOP Polarimeter Calibration</h3>
+                    <div class="institution">Inter-University Centre for Astronomy and Astrophysics (IUCAA), Pune</div>
+                    <div class="advisor">Advisor: Dr. A.N. Ramaprakash (anr@iucaa.in) | July 2025 - Present</div>
+                    <ul>
+                        <li>Commissioning and validating the WALOP-South and WALOP-North four-channel imaging polarimeters, focusing on calibration accuracy, Stokes I/Q/U recovery, polarization-angle zero point, and efficiency tracking for survey-grade stellar polarimetry.</li>
+                        <li>Building end-to-end Python pipelines that implement and stress-test the published WALOP calibration model on laboratory datasets, from dual-beam flux extraction and demodulation through to calibrated Stokes parameters and propagated uncertainties.</li>
+                        <li>Characterizing instrumental polarization signatures, beam-mismatch proxies, and intensity-to-polarization leakage mechanisms while iteratively refining models against measurements to reduce systematic residuals toward survey tolerances.</li>
+                        <li>Proposed (in process) a new Fourier-demodulation-based calibration framework and translated this Fourier-based, Mueller-matrix–driven formalism to WALOP’s four-camera geometry and designed a revised, high-angle-density lab campaign to constrain the new model, in parallel with hands-on work on WALOP-North’s optical setup, alignment, and lab characterization.</li>
+                        <p>
+                            <a class="btn btn--secondary"
+                                href="walop_calib_inprogress.html"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                Rough calibration pipeline
+                            </a>
+                        </p>
+                    </ul>
+                </div>
+
+                <!-- UNIVERSITY OF CINCINNATI -->
+                <div class="research-card">
+                    <h3>CMB Dust Foreground Modeling</h3>
+                    <div class="institution">University of Cincinnati, Cincinnati, OH</div>
+                    <div class="advisor">Advisor: Dr. Colin Bischoff (bischocn@ucmail.uc.edu) | January 2024 - April 2025</div>
+                    <ul>
+                        <li>Developed sophisticated Python algorithms implementing the moments expansion method to model spatial variability in CMB dust spectral indices across the sky.</li>
+                        <li>Modeled polarized dust foreground spatial and spectral properties affecting B-mode polarization measurements that are critical for detecting primordial gravitational waves.</li>
+                        <li>Analyzed the impact of spatial spectral variation on B-mode power spectra with direct relevance to the BICEP/Keck experimental collaboration searching for evidence of cosmic inflation.</li>
+                        <li>Prepared a comprehensive framework for future integration with Bayesian parameter inference techniques and likelihood analysis pipelines on real CMB observational data.</li>
+                    </ul>
+                </div>
+
+                <!-- CARNEGIE INSTITUTION -->
+                <div class="research-card">
+                    <h3>Protoplanetary Disk Simulations</h3>
+                    <div class="institution">Carnegie Institution for Science (EPL), Washington DC</div>
+                    <div class="advisor">Advisor: Dr. Dana Anderson (danderso@usna.edu) | May 2023 - August 2023</div>
+                    <ul>
+                        <li>Conducted comprehensive analysis of protoplanetary disk chemistry and evolution by running sophisticated computational simulations to investigate the impact of varied physical parameters on column densities and fluxes of key molecular components.</li>
+                        <li>Simulated the chemical evolution of planet-forming materials using the rac2d radiative transfer code and advanced thermochemical modeling techniques.</li>
+                        <li>Performed detailed parameterized analysis on protoplanetary disk models to systematically evaluate composition variations and molecular flux distributions under different physical conditions.</li>
+                        <li>Presented scientific insights through data visualizations and analysis, contributing to understanding of planetary formation processes and initial conditions for exoplanet atmospheres.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRESENTATIONS -->
+        <section id="presentations">
+            <h2>Presentations & Publications</h2>
+
+            <!-- AAS iPoster -->
+            <div class="presentation-card">
+                <h3>AAS 244th Meeting iPoster</h3>
+                <div class="presentation-date">June 2024 | Madison, WI</div>
+                <p>Presented research on Exploring the Effects of Temperature and Ionization on Molecular Gas Tracers in Protoplanetary Disks at the American Astronomical Society 244th meeting. </p>
+                <a href="https://aas242-aas.ipostersessions.com/default.aspx?s=BF-35-43-28-7D-9E-31-FC-1E-2C-DC-6A-06-E0-92-D2&kiosk=false&lnkmod=0#popup-at-my-poster" class="btn-presentation" target="_blank">View AAS iPoster Online</a>
+            </div>
+
+            <!-- Capstone iPoster + UC Symposium -->
+            <div class="presentation-card">
+                <h3>Capstone iPoster: CMB Dust Foreground Modeling / UC Undergraduate Research Symposium</h3>
+                <div class="presentation-date">April 2025 | University of Cincinnati</div>
+                <p>Capstone research iPoster and symposium presentation on modeling spatial variability in dust spectral indices and its impact on cosmological parameter constraints from B-mode polarization measurements. This work prepares the framework for Bayesian inference on real CMB data from BICEP/Keck experiments.</p>
+                <a href="Capstone-iPoster-arya-papal.pdf" class="btn-presentation btn-secondary" target="_blank" download>Download Capstone iPoster PDF</a>
+                <a href="#" class="btn-presentation" onclick="document.getElementById('capstone-pdf').style.display='block'; return false;">View Embedded PDF</a>
+                <iframe id="capstone-pdf" src="Capstone-iPoster-arya-papal.pdf" class="pdf-viewer" style="display:none;" title="Capstone iPoster PDF"></iframe>
+            </div>
+
+            <!-- CMB Capstone PPT (now PDF) -->
+            <div class="presentation-card">
+                <h3>CMB Capstone Presentation</h3>
+                <div class="presentation-date">April 2025</div>
+                <p>Detailed presentation covering the theoretical background, methodology, results, and implications of the CMB dust foreground modeling project. Includes analysis of the moments expansion formalism and its application to real observational data.</p>
+                <a href="CMB-Capstone-Presentation.pdf" class="btn-presentation btn-secondary" download>Download Presentation PDF</a>
+            </div>
+
+            <!-- Carnegie SURI Talk -->
+            <div class="presentation-card">
+                <h3>End-of-Summer SURI Research Talk</h3>
+                <div class="presentation-date">August 2023 | Carnegie Institution for Science, Washington DC</div>
+                <p>Final research presentation for the Summer Undergraduate Research Institute (SURI) program, summarizing findings on protoplanetary disk simulations, chemical evolution modeling, and implications for understanding planet formation processes.</p>
+                <a href="FINAL-PRESENTATION-CARNEGIE.pdf" class="btn-presentation btn-secondary" download>Download Final Presentation PDF</a>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills">
+            <h2>Technical Skills & Expertise</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Programming & Data Analysis</h3>
+                    <p>Python, C++, Java, MCMC methods, Simulation-Based Inference (SBI), Git/GitHub version control, LaTeX scientific typesetting, MATLAB numerical computing.</p>
+                </div>
+                <div class="skill-category">
+                    <h3>Astrophysics & Data Methods</h3>
+                    <p>CMB foreground modeling, power spectrum estimation, Bayesian parameter inference, cosmological simulations, FITS file handling and manipulation, SAO ds9 astronomical imaging.</p>
+                </div>
+                <div class="skill-category">
+                    <h3>Instrumentation & Observations</h3>
+                    <p>CCD imaging and data reduction, aperture photometry techniques, polarimetric calibration methodologies, Stokes parameter analysis, Mueller matrix modeling for optical systems, optical alignment and lab characterization for imaging polarimeters (WALOP-South/North).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <h2>Get In Touch</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">
+                I am always interested in discussing research collaborations, PhD opportunities, or questions about CMB polarimetry and instrumentation. Feel free to reach out.
+            </p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Email</strong>
+                    <a href="mailto:aryapapal2406@gmail.com">aryapapal2406@gmail.com</a>
+                </div>
+                <div class="info-item">
+                    <strong>LinkedIn</strong>
+                    <a href="https://www.linkedin.com/in/aryapapal" target="_blank">linkedin.com/in/aryapapal</a>
+                </div>
+                <div class="info-item">
+                    <strong>CV</strong>
+                    <a href="cv_aryapapal.pdf" download>Download Full CV (PDF)</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p style="font-size: 1.1rem; margin-bottom: 1rem;">&copy; 2025 Arya Papal | Astrophysics Researcher</p>
+        <p>
+            <a href="mailto:aryapapal2406@gmail.com">Email</a> | 
+            <a href="https://www.linkedin.com/in/aryapapal" target="_blank">LinkedIn</a> | 
+            <a href="cv_aryapapal.pdf" download>CV</a>
+        </p>
+        <p style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.8;">
+            Built with HTML & CSS | Hosted on GitHub Pages
+        </p>
+    </footer>
+
+    <!-- SMOOTH SCROLLING SCRIPT -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

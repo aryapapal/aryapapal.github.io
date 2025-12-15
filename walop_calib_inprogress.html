@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WALOP Calibration Model: Complete Mueller Matrix Analysis and Fourier Harmonic Decomposition">
+  <title>WALOP Calibration Model: Mueller Matrix Analysis</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0077b6;
+      --primary-dark: #005a87;
+      --accent: #00b4d8;
+      --bg-light: #f8f9fa;
+      --bg-white: #ffffff;
+      --text-dark: #1a1a1a;
+      --text-gray: #555555;
+      --border-color: #e0e0e0;
+      --code-bg: #1e1e1e;
+      --code-text: #e8e8e8;
+      --warning-bg: #fff3cd;
+      --warning-text: #856404;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+      line-height: 1.7;
+      color: var(--text-dark);
+      background: var(--bg-light);
+    }
+
+    /* HEADER & NAVIGATION */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 3rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      font-size: 1.05rem;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    /* TABLE OF CONTENTS */
+    .toc-container {
+      background: var(--bg-white);
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 1200px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-left: 4px solid var(--accent);
+    }
+
+    .toc-container h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .toc-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .toc-section {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 1.2rem;
+      background: var(--bg-light);
+      transition: all 0.3s ease;
+    }
+
+    .toc-section:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0, 119, 182, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .toc-section h3 {
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+    }
+
+    .toc-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .toc-section li {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .toc-section li:last-child {
+      border-bottom: none;
+    }
+
+    .toc-section a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .toc-section a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    /* MAIN CONTENT */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    section {
+      background: var(--bg-white);
+      padding: 3rem;
+      margin: 2rem 0;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    section:first-of-type {
+      margin-top: 0;
+    }
+
+    /* HEADINGS */
+    h2 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid var(--accent);
+      font-weight: 700;
+    }
+
+    section > h2:first-child {
+      margin-top: 0;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      color: var(--primary-dark);
+      margin: 2rem 0 0.8rem;
+      font-weight: 600;
+    }
+
+    h4 {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin: 1.5rem 0 0.6rem;
+      font-weight: 600;
+    }
+
+    h5 {
+      font-size: 1rem;
+      color: var(--text-gray);
+      margin: 1.2rem 0 0.5rem;
+      font-weight: 600;
+    }
+
+    /* PARAGRAPHS & TEXT */
+    p {
+      margin: 1rem 0;
+      color: var(--text-gray);
+      line-height: 1.8;
+    }
+
+    strong {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    em {
+      color: var(--text-dark);
+      font-style: italic;
+    }
+
+    /* LISTS */
+    ul, ol {
+      margin: 1.2rem 0;
+      padding-left: 2rem;
+      color: var(--text-gray);
+    }
+
+    ul li, ol li {
+      margin: 0.6rem 0;
+      line-height: 1.8;
+    }
+
+    ul li strong, ol li strong {
+      color: var(--primary);
+    }
+
+    /* CODE BLOCKS */
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 1.5rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border: 1px solid rgba(0,0,0,0.2);
+      font-family: 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    code {
+      font-family: 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+      background: var(--bg-light);
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      color: var(--primary);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    th {
+      background: var(--primary);
+      color: white;
+      padding: 0.9rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 0.9rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    tr:nth-child(even) {
+      background: var(--bg-light);
+    }
+
+    tr:hover {
+      background: rgba(0, 119, 182, 0.05);
+    }
+
+    /* CALLOUT BOXES */
+    .callout {
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin: 1.5rem 0;
+      border-left: 4px solid var(--accent);
+      background: rgba(0, 180, 216, 0.05);
+    }
+
+    .callout.warning {
+      background: var(--warning-bg);
+      border-left-color: #ff9800;
+    }
+
+    .callout.important {
+      background: rgba(244, 67, 54, 0.08);
+      border-left-color: #f44336;
+    }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .callout.warning strong {
+      color: #856404;
+    }
+
+    .callout.important strong {
+      color: #c62828;
+    }
+
+    /* EQUATION BOX */
+    .equation {
+      background: var(--bg-light);
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--primary);
+      font-family: 'SFMono-Regular', 'Menlo', 'Monaco', monospace;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    /* FOOTER & NAVIGATION */
+    .section-nav {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .section-nav a:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    footer {
+      background: var(--text-dark);
+      color: white;
+      padding: 2rem;
+      margin-top: 4rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    footer p {
+      color: rgba(255,255,255,0.7);
+      margin: 0.4rem 0;
+    }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 1rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 99;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.6rem;
+      }
+
+      header p {
+        font-size: 1rem;
+      }
+
+      section {
+        padding: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      main {
+        padding: 0 1rem 2rem;
+      }
+
+      .toc-content {
+        grid-template-columns: 1fr;
+      }
+
+      pre {
+        padding: 1rem;
+        font-size: 0.85rem;
+      }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 0.6rem;
+      }
+
+      .back-to-top {
+        bottom: 1rem;
+        right: 1rem;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-container">
+    <h1>WALOP Calibration Model</h1>
+    <p>Complete Mueller Matrix Analysis & Fourier Harmonic Decomposition</p>
+  </div>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc-container">
+  <div class="header-container">
+    <h2>Contents</h2>
+    <div class="toc-content">
+      <div class="toc-section">
+        <h3>Section 1</h3>
+        <ul>
+          <li><a href="#section1">Complete Mueller Matrix Formulation</a></li>
+          <li><a href="#section1-1">Full System Chain</a></li>
+          <li><a href="#section1-2">Input Stokes Vector</a></li>
+          <li><a href="#section1-3">BK7 Wedge</a></li>
+        </ul>
+      </div>
+      <div class="toc-section">
+        <h3>Section 2</h3>
+        <ul>
+          <li><a href="#section2">Fourier Decomposition Principle</a></li>
+          <li><a href="#section2-1">Why Fourier?</a></li>
+          <li><a href="#section2-3">DFT Extraction</a></li>
+          <li><a href="#section2-5">Physical Meaning</a></li>
+        </ul>
+      </div>
+      <div class="toc-section">
+        <h3>Section 3-4</h3>
+        <ul>
+          <li><a href="#section3">One-Shot Equivalents</a></li>
+          <li><a href="#section4">Cross-Talk Extraction</a></li>
+          <li><a href="#section5">Least-Squares Fitting</a></li>
+          <li><a href="#section6">Science Application</a></li>
+        </ul>
+      </div>
+      <div class="toc-section">
+        <h3>Section 5-8</h3>
+        <ul>
+          <li><a href="#section5">Calibration Fitting</a></li>
+          <li><a href="#section6">Science-Night Application</a></li>
+          <li><a href="#section7">Error Budget</a></li>
+          <li><a href="#section8">Quality Assurance</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+
+<!-- SECTION 1: MUELLER MATRICES -->
+<section id="section1">
+  <h2>Section 1: Complete Mueller Matrix Formulation</h2>
+
+  <h3 id="section1-1">1.1 Full System Mueller Matrix Chain (Sky to Measurement)</h3>
+
+  <p>The light path through WALOP can be decomposed into <strong>sequential Mueller matrix transformations</strong>. Each optical element modifies the polarization state through matrix multiplication.</p>
+
+  <h4>Complete Mathematical Chain</h4>
+
+  <p><strong>For the Q-arm (Arm 1):</strong></p>
+  <div class="equation">
+S_measured^(1) = M_WP1 × M_HWP1(θ_inc, T) × M_BK7 × S_sky
+  </div>
+
+  <p><strong>For the U-arm (Arm 2):</strong></p>
+  <div class="equation">
+S_measured^(2) = M_WP2 × M_HWP2(θ_inc, T) × M_BK7 × S_sky
+  </div>
+
+  <p><strong>Where:</strong></p>
+  <ul>
+    <li><code>S_sky</code> = [I, Q, U, V]ᵀ (input Stokes vector from star)</li>
+    <li><code>M_BK7</code> = Mueller matrix of beam-splitting wedge</li>
+    <li><code>M_HWP1, M_HWP2</code> = Mueller matrices of fixed HWPs in each arm (field-dependent)</li>
+    <li><code>M_WP1, M_WP2</code> = Mueller matrices of Wollaston prisms</li>
+    <li><code>θ_inc(x,y)</code> = angle of incidence at field point (x,y)</li>
+    <li><code>T</code> = temperature (affects birefringence Δn)</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Physical Interpretation</strong>
+    Each Mueller matrix is a 4×4 transformation that describes how that optical element distorts the input polarization state. By multiplying them sequentially, we obtain the total instrument response.
+  </div>
+
+  <h3>1.2 Input Stokes Vector (Sky Source)</h3>
+
+  <p>An arbitrary polarized star can be described by its Stokes vector:</p>
+
+  <div class="equation">
+S_sky = [I]       = [I_0(1 + p cos 2ψ)]
+        [Q]         [p cos 2ψ        ]
+        [U]         [p sin 2ψ        ]
+        [V]         [0               ]
+  </div>
+
+  <p><strong>Components:</strong></p>
+  <ul>
+    <li><strong>I</strong> = total intensity (brightness)</li>
+    <li><strong>Q</strong> = linear polarization along meridian (0° E-W, 180° N-S)</li>
+    <li><strong>U</strong> = linear polarization along diagonal (45° NE-SW)</li>
+    <li><strong>V</strong> = circular polarization (usually ~0 for stellar light)</li>
+    <li><strong>p</strong> ∈ [0,1] = degree of linear polarization</li>
+    <li><strong>ψ</strong> = position angle (EVPA) measured East from North</li>
+  </ul>
+
+  <div class="callout important">
+    <strong>Key Insight</strong>
+    The Stokes vector is a complete mathematical description of polarization. Any optical element that changes polarization does so by rotating and mixing these four components.
+  </div>
+
+  <h3>1.3 Mueller Matrix of BK7 Wedge Beam Splitter</h3>
+
+  <p>The BK7 wedge has two main functions:</p>
+  <ol>
+    <li>Split the incoming beam 50-50 into two parallel arms</li>
+    <li>Introduce small stress-induced birefringence and differential transmission</li>
+  </ol>
+
+  <p><strong>Ideal Mueller (perfect 50-50 split):</strong></p>
+
+  <div class="equation">
+M_BK7_ideal = [1/2,  0,    0,    0  ]
+              [0,    1/2,  0,    0  ]
+              [0,    0,    1/2,  0  ]
+              [0,    0,    0,    1/2]
+  </div>
+
+  <p><strong>Real Mueller (with stress effects):</strong></p>
+
+  <div class="equation">
+M_BK7_real = [1/2,  0,           0,           0  ]
+             [0,    1/2,         ε_BK7,       0  ]
+             [0,    ε_BK7,       1/2,         0  ]
+             [0,    0,           0,           1/2]
+  </div>
+
+  <p>Where <strong>ε_BK7 ≈ 0.002 to 0.01</strong> represents small Q↔U mixing from stress-induced birefringence in coating layers.</p>
+
+  <div class="callout">
+    <strong>Physical Interpretation</strong>
+    The off-diagonal ε_BK7 terms mean that some of the input Q polarization "leaks" into the U direction, and vice versa. This is small but measurable and cumulative through the optical chain.
+  </div>
+
+</section>
+
+<!-- SECTION 2: FOURIER DECOMPOSITION -->
+<section id="section2">
+  <h2>Section 2: Fourier Decomposition Principle</h2>
+
+  <h3 id="section2-1">2.1 Why Fourier? The Modulation Problem</h3>
+
+  <p>During calibration, the <strong>internal rotating HWP</strong> is stepped through 16 angles:</p>
+
+  <div class="equation">
+α_i = i × 22.5°,  i = 0, 1, 2, ..., 15
+  </div>
+
+  <p>This rotating HWP adds an additional Mueller transformation. For a source with constant input polarization, the measured signal <strong>oscillates sinusoidally</strong> as we step through the 16 angles.</p>
+
+  <div class="callout">
+    <strong>The Core Insight</strong>
+    Different physical effects create oscillations at different frequencies. Fourier analysis naturally separates these frequencies, allowing us to isolate each effect independently.
+  </div>
+
+  <h3 id="section2-2">2.2 Mathematical Formulation</h3>
+
+  <p>The measured intensity ratio is:</p>
+
+  <div class="equation">
+R(α, θ) = a₀(θ)  +  [a₂ cos(2α) + b₂ sin(2α)]
+                  +  [a₄ cos(4α) + b₄ sin(4α)]
+                  +  [a₁ cos(α) + b₁ sin(α)]    [wobble]
+                  +  [a₃ cos(3α) + b₃ sin(3α)]  [asymmetry]
+  </div>
+
+  <p><strong>Physical Origins:</strong></p>
+  <table>
+    <tr>
+      <th>Harmonic</th>
+      <th>Physical Origin</th>
+      <th>Typical Magnitude</th>
+    </tr>
+    <tr>
+      <td><code>a₀</code> (DC)</td>
+      <td>Detector baseline imbalance</td>
+      <td>~0.01-0.05</td>
+    </tr>
+    <tr>
+      <td><code>a₂, b₂</code> (2f)</td>
+      <td>Rotating HWP retardance error</td>
+      <td>~0.01-0.05</td>
+    </tr>
+    <tr>
+      <td><code>a₄, b₄</code> (4f)</td>
+      <td>True polarization signal + fixed HWP contamination</td>
+      <td>~0.5-1.0</td>
+    </tr>
+    <tr>
+      <td><code>a₁, b₁</code> (1f)</td>
+      <td>Mechanical wobble</td>
+      <td>&lt;0.001 (ideal)</td>
+    </tr>
+    <tr>
+      <td><code>a₃, b₃</code> (3f)</td>
+      <td>3-fold asymmetry, bearing defects</td>
+      <td>&lt;0.001 (ideal)</td>
+    </tr>
+  </table>
+
+  <h3 id="section2-3">2.3 Discrete Fourier Transform (DFT) Extraction</h3>
+
+  <p>With 16 evenly-spaced samples over 360°, we perform a standard DFT:</p>
+
+  <div class="equation">
+a_n(θ) = (1/16) × Σ_{i=0}^{15} R_i(θ) × cos(n × α_i)
+
+b_n(θ) = (1/16) × Σ_{i=0}^{15} R_i(θ) × sin(n × α_i)
+
+A_n(θ) = √(a_n² + b_n²)    [magnitude, phase-invariant]
+  </div>
+
+  <div class="callout warning">
+    <strong>Why 16 Samples?</strong>
+    Nyquist-Shannon theorem requires ≥2 samples per frequency. With f_max = 4, we need ≥8 samples. We use 16 for better noise averaging and margin.
+  </div>
+
+  <h3 id="section2-4">2.4 Orthogonality Property</h3>
+
+  <p>A fundamental property ensures clean separation:</p>
+
+  <div class="equation">
+(1/N) × Σ_{i=0}^{N-1} cos(n × α_i) × cos(m × α_i) = { 1/2 if n = m
+                                                        0   if n ≠ m
+  </div>
+
+  <div class="callout">
+    <strong>Consequence</strong>
+    When we extract the a₄ component (4f signal), the n=2 terms contribute exactly zero due to orthogonality. The harmonics are mathematically independent, even if physically coupled.
+  </div>
+
+  <h3 id="section2-5">2.5 Physical Meaning of Each Harmonic</h3>
+
+  <h4>n=0 (DC Component)</h4>
+  <p><code>a₀ = mean of all 16 measurements</code></p>
+  <ul>
+    <li>Detector baseline offset (dark current, bias)</li>
+    <li>Imbalance between ordinary and extraordinary beams</li>
+    <li>Instrumental linear polarization</li>
+  </ul>
+
+  <h4>n=2 (Rotating HWP Error)</h4>
+  <p><code>A₂ = √(a₂² + b₂²)</code></p>
+  <ul>
+    <li>Magnitude of rotating HWP retardance error (δ = π + ε)</li>
+    <li>Creates 2f modulation in Mueller analysis</li>
+    <li>Must be corrected when extracting true signal at n=4</li>
+  </ul>
+
+  <h4>n=4 (True Signal + Cross-Talk)</h4>
+  <p><code>a₄, b₄</code></p>
+  <ul>
+    <li>True Q or U polarization from the star</li>
+    <li>Contaminated by fixed HWP cross-talk</li>
+    <li>This is the signal we want to extract</li>
+  </ul>
+
+  <h4>n=1, n=3 (Mechanical Diagnostics)</h4>
+  <p><code>A₁, A₃</code></p>
+  <ul>
+    <li>Should be &lt;0.001 for perfect instrument</li>
+    <li>Indicate bearing wear or mounting problems</li>
+    <li>Useful for condition-based maintenance</li>
+  </ul>
+
+</section>
+
+<!-- SECTION 3: ONE-SHOT EQUIVALENTS -->
+<section id="section3">
+  <h2>Section 3: One-Shot Equivalent Reconstruction</h2>
+
+  <h3>3.1 The Conceptual Leap</h3>
+
+  <p><strong>Science Mode (normal operation):</strong> Single exposure, no rotating HWP, 4 simultaneous measurements</p>
+
+  <p><strong>Calibration Mode:</strong> 16 exposures per CLP angle (due to rotating HWP)</p>
+
+  <p>The challenge: Our calibration data (16 angles) differs from science data (1 angle). Solution: Use Fourier extraction to "remove" the rotating HWP artifact.</p>
+
+  <div class="equation">
+Q_m = a₄^(1) - K₁ × A₂^(1)
+U_m = a₄^(2) - K₂ × A₂^(2)
+  </div>
+
+  <div class="callout">
+    <strong>Q_m, U_m</strong> = "measured" quantities as if one-shot mode (rotating HWP artifact removed)  
+    <strong>K₁, K₂</strong> = empirically-determined coupling coefficients
+  </div>
+
+</section>
+
+<!-- SECTION 4: CROSS-TALK EXTRACTION -->
+<section id="section4">
+  <h2>Section 4: Fixed HWP Cross-Talk Extraction (C₁, C₂)</h2>
+
+  <h3>4.1 Pure-State Measurement Protocol</h3>
+
+  <p>Extract C₁ and C₂ using <strong>calibration sources with known polarization</strong>:</p>
+
+  <ul>
+    <li><strong>CLP at θ = 0°:</strong> Pure Q state, S = [1, 1, 0, 0]ᵀ</li>
+    <li><strong>CLP at θ = 90°:</strong> Pure U state, S = [1, 0, 1, 0]ᵀ</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Define C₂:</strong>
+    <br>C₂(x,y) = [U_m measured at θ=0°] / [Q_m at θ=0°]
+    <br>= how much Q leaks into U-arm / true Q signal in Q-arm
+  </div>
+
+  <h3>4.2 Mueller Matrix Inversion</h3>
+
+  <p>The 2×2 effective Mueller matrix per arm:</p>
+
+  <div class="equation">
+M⁻¹ ≈ 1/(1 + C₁C₂) × [ -1,      C₁   ]
+                       [ C₂,       1   ]
+  </div>
+
+  <p><strong>Application to science data:</strong></p>
+
+  <div class="equation">
+Q_true ≈ -Q_measured + C₁ × U_measured
+U_true ≈ -U_measured + C₂ × Q_measured
+  </div>
+
+</section>
+
+<!-- SECTION 5: LEAST-SQUARES FITTING -->
+<section id="section5">
+  <h2>Section 5: Least-Squares Calibration Fitting</h2>
+
+  <h3>5.1 The Regression Problem</h3>
+
+  <p>After extracting Q_m, U_m, C₁, C₂, A₀ for all calibration sources, solve an <strong>overdetermined linear system</strong> to find best-fit coefficients:</p>
+
+  <h4>Fit Model (Q-arm)</h4>
+
+  <div class="equation">
+q_calib^(j) = α_q × Q_m^(j) + β_q × C₁ × U_m^(j) + δ_q × A₀^(1)(j) + γ_q × (Q_m^(j))² + ε_q
+  </div>
+
+  <p><strong>Unknown Parameters:</strong></p>
+  <ul>
+    <li><code>α_q</code> = Q-arm efficiency</li>
+    <li><code>β_q</code> = U-leakage coefficient</li>
+    <li><code>δ_q</code> = offset sensitivity</li>
+    <li><code>γ_q</code> = nonlinearity</li>
+    <li><code>ε_q</code> = residual offset</li>
+  </ul>
+
+  <h3>5.2 Matrix Formulation</h3>
+
+  <div class="equation">
+(X^T W X) θ = X^T W Y
+
+where X = design matrix, W = weight matrix, θ = coefficient vector
+  </div>
+
+  <h3>5.3 Validation Steps</h3>
+
+  <ol>
+    <li><strong>Residual check:</strong> Plot histogram of residuals (should be Gaussian)</li>
+    <li><strong>Reduced χ²:</strong> Compute χ²/dof (should be ≈ 1)</li>
+    <li><strong>Outlier detection:</strong> Flag |residual| > 3σ measurements</li>
+    <li><strong>Parameter correlation:</strong> Check for high correlations (ρ > 0.7)</li>
+  </ol>
+
+</section>
+
+<!-- SECTION 6: SCIENCE APPLICATION -->
+<section id="section6">
+  <h2>Section 6: Science-Night Calibration Application</h2>
+
+  <h3>6.1 Measurement Sequence</h3>
+
+  <ol>
+    <li><strong>Acquisition:</strong> Point telescope, expose, read 4 detectors</li>
+    <li><strong>Compute raw:</strong> Q_raw and U_raw from detector signals</li>
+    <li><strong>Find calibration grid:</strong> Locate nearest grid point to target</li>
+    <li><strong>Load coefficients:</strong> Retrieve (α, β, δ, γ, ε) for that grid</li>
+    <li><strong>Apply calibration:</strong> Transform raw → calibrated values</li>
+    <li><strong>Compute polarimetry:</strong> p = √(Q² + U²) / I, θ = atan2(U, Q) / 2</li>
+    <li><strong>Error propagation:</strong> Compute σ_p, σ_θ</li>
+  </ol>
+
+  <h3>6.2 Output Science Product</h3>
+
+  <p>For each observed target:</p>
+
+  <table>
+    <tr>
+      <th>Quantity</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>p (±σ_p)</td>
+      <td>Polarization degree with uncertainty</td>
+    </tr>
+    <tr>
+      <td>θ (±σ_θ)</td>
+      <td>Position angle in degrees</td>
+    </tr>
+    <tr>
+      <td>SNR</td>
+      <td>Photon signal-to-noise ratio</td>
+    </tr>
+    <tr>
+      <td>Quality flags</td>
+      <td>Distance from grid, interpolation method</td>
+    </tr>
+  </table>
+
+</section>
+
+<!-- SECTION 7: ERROR BUDGET -->
+<section id="section7">
+  <h2>Section 7: Error Budget & Uncertainty Analysis</h2>
+
+  <h3>7.1 Sources of Uncertainty</h3>
+
+  <table>
+    <tr>
+      <th>Source</th>
+      <th>Magnitude</th>
+      <th>Dependence</th>
+    </tr>
+    <tr>
+      <td>Photon noise</td>
+      <td>σ_Q ~ 2/√I</td>
+      <td>∝ 1/√flux</td>
+    </tr>
+    <tr>
+      <td>Calibration coeff.</td>
+      <td>~1% of coeff.</td>
+      <td>×measured value</td>
+    </tr>
+    <tr>
+      <td>Temperature drift</td>
+      <td>dC/dT ~ 0.001-0.005 K⁻¹</td>
+      <td>×temperature change</td>
+    </tr>
+    <tr>
+      <td>Grid interpolation</td>
+      <td>~1% per grid spacing</td>
+      <td>∝(distance)²</td>
+    </tr>
+  </table>
+
+  <h3>7.2 Total Error Budget (Example: Bright Star, p ~ 0.05)</h3>
+
+  <div class="equation">
+Photon noise (Q, U):        ±0.002  (4%)
+Calibration:                ±0.0005 (1%)
+Temperature:                ±0.001  (2%)
+Interpolation:              ±0.0015 (3%)
+────────────────────────────────────
+TOTAL (per component):      ±0.0035 (7%)
+  </div>
+
+  <div class="callout warning">
+    <strong>Target:</strong> Achieve 0.5% systematic uncertainty by selecting stars mag &lt; 12 (photon noise &lt; 1%) and using fine calibration grid.
+  </div>
+
+</section>
+
+<!-- SECTION 8: QA & VALIDATION -->
+<section id="section8">
+  <h2>Section 8: Quality Assurance & Validation</h2>
+
+  <h3>8.1 Calibration Night Validation</h3>
+
+  <ol>
+    <li><strong>Residual analysis:</strong> Check for Gaussian distribution, mean ≈ 0</li>
+    <li><strong>Consistency across grids:</strong> Plot spatial maps, check smoothness</li>
+    <li><strong>Temperature correlation:</strong> Monitor dC/dT during night</li>
+    <li><strong>Mechanical diagnostics:</strong> Track A₁, A₃ for bearing health</li>
+  </ol>
+
+  <h3>8.2 Science Data Validation</h3>
+
+  <ol>
+    <li><strong>SNR check:</strong> Flag low-SNR observations</li>
+    <li><strong>Outlier detection:</strong> Compare repeated observations of same target</li>
+    <li><strong>Cross-calibration:</strong> Validate against literature values for standards</li>
+  </ol>
+
+  <div class="callout important">
+    <strong>Quality Flags:</strong>  
+    SNR &gt; 100: high confidence  
+    SNR 30-100: moderate confidence  
+    SNR &lt; 30: low confidence, mark tentative
+  </div>
+
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>WALOP Calibration Model: Complete Mueller Matrix Analysis</strong></p>
+  <p>Fourier Harmonic Decomposition Method</p>
+  <p>© 2025 | Arya Papal | IUCAA, University of Cincinnati</p>
+  <p>Last Updated: December 15, 2025</p>
+</footer>
+
+<!-- BACK TO TOP BUTTON -->
+<a href="#header" class="back-to-top" id="backToTop">↑ Top</a>
+
+<script>
+  // Back to top button functionality
+  const backToTopBtn = document.getElementById('backToTop');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
+    }
+  });
+
+  backToTopBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
